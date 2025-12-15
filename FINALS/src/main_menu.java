@@ -96,8 +96,11 @@ private void registerStudent() {
     }
 
     JOptionPane.showMessageDialog(this, "Registration successful!");
-    tfStudentIDRegister.setText("");
-     this.dispose();
+    tfStudentIDRegister.setText("");    
+    
+    LIST lis = new LIST();
+    lis.setVisible(true);
+    dispose();
 }
 
  
