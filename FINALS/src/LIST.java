@@ -37,6 +37,40 @@ public void displayStudents() {
     taStudentList.setText(sb.toString());
 }
 
+public void searchStudent(String query) {
+        StringBuilder sb = new StringBuilder();
+        boolean found = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("text.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                if (line.toLowerCase().contains(query.toLowerCase())) { // linear search
+                    String[] parts = line.split(",", 2);
+                    sb.append("ID: ").append(parts[0]);
+
+                    if (parts.length > 1 && !parts[1].trim().isEmpty()) {
+                        sb.append(" | Time: ").append(parts[1]);
+                    } else {
+                        sb.append(" | Time: (no timestamp)");
+                    }
+                    sb.append("\n");
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                sb.append("No matching records found.");
+            }
+
+        } catch (IOException e) {
+            sb.append("No registrations yet.");
+        }
+
+        taStudentList.setText(sb.toString());
+    }
+
 
     
     
@@ -49,6 +83,13 @@ public LIST() {
     taStudentList.setEditable(false);
     displayStudents();
     btnRefresh.addActionListener(e -> displayStudents());
+    // SearchTF listener (trigger search when Enter is pressed)
+    SearchTF.addActionListener(e -> {
+        String query = SearchTF.getText().trim();
+        if (!query.isEmpty()) {
+            searchStudent(query);
+        }
+    });
 }
 
     /**
@@ -68,6 +109,7 @@ public LIST() {
         jScrollPane2 = new javax.swing.JScrollPane();
         taStudentList = new javax.swing.JTextArea();
         btnRefresh = new javax.swing.JButton();
+        SearchTF = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,6 +158,12 @@ public LIST() {
 
         btnRefresh.setText("Refresh List");
 
+        SearchTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SearchTFKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -124,6 +172,8 @@ public LIST() {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(btnRefresh)
+                .addGap(41, 41, 41)
+                .addComponent(SearchTF, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Return)
                 .addGap(16, 16, 16))
@@ -141,7 +191,8 @@ public LIST() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Return)
-                    .addComponent(btnRefresh))
+                    .addComponent(btnRefresh)
+                    .addComponent(SearchTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14))
         );
 
@@ -170,6 +221,10 @@ DASHBOARD dash = new DASHBOARD();
         dash.setVisible(true);
         dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_ReturnActionPerformed
+
+    private void SearchTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchTFKeyReleased
+       
+    }//GEN-LAST:event_SearchTFKeyReleased
     /**
      * @param args the command line arguments
      */
@@ -207,6 +262,7 @@ DASHBOARD dash = new DASHBOARD();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Return;
+    private javax.swing.JTextField SearchTF;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
